@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Favorite {
+  id      String @id @db.VarChar
+  matchId String @db.VarChar
+  userId  String @db.VarChar
+  User    User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([id], map: "ix_Favorite_id")
+}
+
+model SoccerMatches {
+  id            String   @id @db.VarChar
+  id_sports_api String   @db.VarChar
+  view_count    Int
+  prediction_ai String?  @db.VarChar
+  finished      Boolean?
+  venueId       String   @db.VarChar
+  local_team    String   @db.VarChar
+  visitor_team  String   @db.VarChar
+  Venue         Venue    @relation(fields: [venueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([id], map: "ix_SoccerMatches_id")
+}
+
+model User {
+  id        String     @id @db.VarChar
+  email     String     @unique(map: "ix_User_email") @db.VarChar
+  name      String?    @db.VarChar
+  password  String     @db.VarChar
+  createdAt DateTime?  @default(now())
+  updatedAt DateTime?
+  Favorite  Favorite[]
+
+  @@index([id], map: "ix_User_id")
+}
+
+model Venue {
+  id            String          @id @db.VarChar
+  stadium       String          @unique(map: "ix_Venue_stadium") @db.VarChar
+  location      String?         @db.VarChar
+  lat           String          @db.VarChar
+  lon           String?         @db.VarChar
+  createdAt     DateTime?       @db.Timestamp(6)
+  updatedAt     DateTime?       @db.Timestamp(6)
+  weather       String?         @db.VarChar
+  temperature   Float?
+  wind_speed    Float?
+  SoccerMatches SoccerMatches[]
+
+  @@index([id], map: "ix_Venue_id")
+}
+
+model alembic_version {
+  version_num String @id(map: "alembic_version_pkc") @db.VarChar(32)
+}
