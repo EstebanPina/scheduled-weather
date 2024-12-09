@@ -16,7 +16,7 @@ export class WeatherService {
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
   ) {}
-  @Cron('0 */2 * * *')
+  @Cron('* */2 * * *')
   async handleCron() {
     const result = await this.prisma.$queryRaw<VenueLocation[]>`
         SELECT lat, lon
@@ -26,6 +26,7 @@ export class WeatherService {
     
     result.map((location) => {
         this.updateWeather(location);
+        console.log('Weather updated for location:', location);
     });
 
     
@@ -38,7 +39,6 @@ export class WeatherService {
       .pipe(map((response: AxiosResponse) => response.data))
       .subscribe(
           async (data) => {
-              console.log('Weather Data:', data);
               await this.prisma.venue.updateMany({
                   where: { lat:location.lat, lon: location.lon } ,
                   data: {
@@ -48,7 +48,7 @@ export class WeatherService {
               }})
           },
           (error) => {
-              console.error('Error fetching weather data:', error.message);
+              console.error('Error fetching weather data:', error);
           }
       );
   }
