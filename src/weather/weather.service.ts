@@ -16,7 +16,7 @@ export class WeatherService {
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
   ) {}
-  @Cron('* */2 * * *')
+  @Cron('0 */2 * * *')
   async handleCron() {
     const result = await this.prisma.$queryRaw<VenueLocation[]>`
         SELECT lat, lon

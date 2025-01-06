@@ -30,6 +30,7 @@ let WeatherService = class WeatherService {
     `;
         result.map((location) => {
             this.updateWeather(location);
+            console.log('Weather updated for location:', location);
         });
     }
     async updateWeather(location) {
@@ -39,7 +40,6 @@ let WeatherService = class WeatherService {
             .get(url)
             .pipe((0, operators_1.map)((response) => response.data))
             .subscribe(async (data) => {
-            console.log('Weather Data:', data);
             await this.prisma.venue.updateMany({
                 where: { lat: location.lat, lon: location.lon },
                 data: {
@@ -49,7 +49,7 @@ let WeatherService = class WeatherService {
                 }
             });
         }, (error) => {
-            console.error('Error fetching weather data:', error.message);
+            console.error('Error fetching weather data:', error);
         });
     }
 };
