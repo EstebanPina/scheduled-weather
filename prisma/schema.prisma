@@ -17,15 +17,17 @@ model Favorite {
 }
 
 model SoccerMatches {
-  id            String   @id @db.VarChar
-  id_sports_api String   @db.VarChar
-  view_count    Int
-  prediction_ai String?  @db.VarChar
-  finished      Boolean?
-  venueId       String   @db.VarChar
-  local_team    String   @db.VarChar
-  visitor_team  String   @db.VarChar
-  Venue         Venue    @relation(fields: [venueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id               String   @id @db.VarChar
+  id_sports_api    String   @db.VarChar
+  view_count       Int
+  prediction_ai    String?  @db.VarChar
+  finished         Boolean?
+  venueId          String   @db.VarChar
+  local_team       String   @db.VarChar
+  visitor_team     String   @db.VarChar
+  local_team_img   String?  @db.VarChar
+  visitor_team_img String?  @db.VarChar
+  Venue            Venue    @relation(fields: [venueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([id], map: "ix_SoccerMatches_id")
 }
